@@ -5,6 +5,7 @@
 -->
 
 ## Helpful links
+- [shunting yard algorithm for parsing equations](https://en.wikipedia.org/wiki/Shunting_yard_algorithm)
 - [raylib examples - lots of interactive examples with code](https://www.raylib.com/examples.html)
 - [raylib cheatsheet - list and explains everything in raylib](https://www.raylib.com/cheatsheet/cheatsheet.html)
 - [setup raylib windows](https://github.com/raysan5/raylib/wiki/Working-on-Windows)
@@ -12,7 +13,7 @@
 
 ## Bare minimum raylib example
 ```cpp
-#include "raylib.h"
+#include <raylib.h>
 
 int main() {
     InitWindow(800, 450, "title");
