@@ -1,5 +1,9 @@
 # CS361-SP2023-Calculator
 
+<!--
+    Markdown guide https://www.markdownguide.org/basic-syntax/
+-->
+
 ## Helpful links
 - [raylib examples - lots of interactive examples with code](https://www.raylib.com/examples.html)
 - [raylib cheatsheet - list and explains everything in raylib](https://www.raylib.com/cheatsheet/cheatsheet.html)
