@@ -1,9 +1,13 @@
 #include <iostream>
-#include <raylib.h>
+#include "include/raylib.h"
 #include <string>
 #include <tuple>
 #include <unordered_map>
 #include <vector>
+
+const int screenWidth = 800;
+const int screenHeight = 450;
+Rectangle textDisplay = { screenWidth/2 - 100, 180, 225, 50 };
 
 std::string GetCharsPressed() {
   std::string input;
@@ -44,15 +48,16 @@ bool GetInput(std::vector<std::string> &history) {
 }
 
 void DrawDisplay(std::vector<std::string> history, std::string answer = "") {
-  DrawText(history.back().c_str(), 24, 225 - 12, 24, BLACK);
+  DrawText(history.back().c_str(), (int)textDisplay.x+5, (int)textDisplay.y + 8, 40, BLACK);
   for (int i = 0; i < history.size() - 1; i++) {
-    DrawText(history[i].c_str(), 24, 225 - 12 - 24 * (history.size() - i - 1),
+    DrawText(history[i].c_str(), (int)textDisplay.x+5, 225 - 12 - 24 * (history.size() - i - 1),
              24, GRAY);
   }
 }
 
 int main() {
-  InitWindow(800, 450, "Calculator");
+  
+  InitWindow(screenWidth, screenHeight, "Calculator");
   SetTargetFPS(60);
 
   // Initialize variables
@@ -67,6 +72,9 @@ int main() {
 
     BeginDrawing();
     ClearBackground(WHITE);
+
+    DrawText("Calculator", (int)textDisplay.x, (int)textDisplay.y - 40, 24, BLACK);
+    DrawRectangleLines((int)textDisplay.x, (int)textDisplay.y, (int)textDisplay.width, (int)textDisplay.height, DARKGRAY);
 
     DrawDisplay(history);
 
