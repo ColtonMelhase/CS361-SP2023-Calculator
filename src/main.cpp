@@ -1,6 +1,6 @@
 #include "constants.h"
+#include "include/raylib.h"
 #include "input.cpp"
-#include "raylib.h"
 #include "render.cpp"
 #include "solve.cpp"
 #include <iostream>
