@@ -13,13 +13,16 @@ int main() {
 
   // Initialize variables
   std::vector<std::string> history;
-  std::vector<std::vector<std::string>> buttons = {
-      {"tan", "cos"}, {"sin", "tan"}, {"blue"}};
+  std::vector<std::string> buttons = {"sin(", "(", ")", "delete", "1", "2", "3",
+                                      "+",    "4", "5", "6",      "-", "7", "8",
+                                      "9",    "*", "0", ".",      "=", "/"};
+  Rectangle keypadRect = {0, (float)screenHeight * .6, screenWidth,
+                          (float)screenHeight * (1 - .6)};
+  int keypadKeyWrap = 4;
   history.push_back("");
 
-  //
   while (!WindowShouldClose()) {
-    if (GetInput(history)) { // solve equation when true
+    if (GetInput(history, keypadRect, buttons, keypadKeyWrap)) {
       // Solve second to last entry in history
       // because last entry is current input
       // Solve(history[history.size() - 2]);
@@ -36,6 +39,8 @@ int main() {
     DrawRectangleLines((int)textDisplay.x, (int)textDisplay.y,
                        (int)textDisplay.width, (int)textDisplay.height,
                        DARKGRAY);
+
+    DrawButtons(keypadRect, buttons, keypadKeyWrap);
 
     EndDrawing();
   }
