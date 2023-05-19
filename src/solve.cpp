@@ -50,7 +50,7 @@ std::deque<Token> expressionToTokens(std::string expr) {
     for(const auto* p = expr.c_str(); *p; ++p) {
         if(isblank(*p)) {
             //nothing
-        } else if(isdigit(*p)) {
+        } else if(isdigit(*p)) { //digit
             const auto* b = p;
             while(isdigit(*p)) {
                 ++p;
@@ -58,7 +58,15 @@ std::deque<Token> expressionToTokens(std::string expr) {
             const auto s = std::string(b, p);
             tokens.push_back(Token {Token::Type::Number, s});
             --p;
-        } else {
+        } else if(isalpha(*p)){ //function (sin, tan, etc)
+            const auto* b = p;
+            while(isalpha(*p)) {
+                ++p;
+            }
+            const auto s = std::string(b, p);
+            tokens.push_back(Token {Token::Type::Number, s});
+            --p;
+        } else { //operator
             Token::Type t = Token::Type::Unknown;
             char c = *p;
             int precedence = -1;
