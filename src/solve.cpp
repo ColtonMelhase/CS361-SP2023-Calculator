@@ -64,7 +64,7 @@ std::deque<Token> expressionToTokens(std::string expr) {
                 ++p;
             }
             const auto s = std::string(b, p);
-            tokens.push_back(Token {Token::Type::Number, s});
+            tokens.push_back(Token {Token::Type::Function, s, 4, false, false});
             --p;
         } else { //operator
             Token::Type t = Token::Type::Unknown;
