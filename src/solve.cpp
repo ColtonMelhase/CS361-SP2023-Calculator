@@ -90,6 +90,7 @@ std::deque<Token> expressionToTokens(std::string expr) {
                         c = 'm';
                         t = Token::Type::Operator;
                         precedence = 5;
+                        rightAssociative = true;
                     }
                     else {
                         t = Token::Type::Operator;
@@ -123,4 +124,84 @@ void printDeque(std::deque<Token> dq) {
         }
     }
     cout << "]";
+}
+
+//shunting yard algorithm
+//WIP
+//Can go through numbers, parenthesis and operators. Still need to add function, constant and variable support
+std::deque<Token> shuntingYard(const std::deque<Token>& tokens) {
+    std::deque<Token> queue;
+    std::vector<Token> stack;
+
+    for(auto token : tokens) {
+        switch(token.type) {
+            case Token::Type::Number:
+                queue.push_back(token);
+                break;
+            
+            case Token::Type::Operator: {
+                const auto o1 = token;
+
+                while(!stack.empty()) {
+                    const auto o2 = stack.back();
+
+                    if((!o1.rightAssociative && o1.precedence <= o2.precedence) ||
+                        (o1.rightAssociative && o1.precedence < o2.precedence)) {
+                            stack.pop_back();
+                            queue.push_back(o2);
+
+                            continue;
+                        }
+                        break;
+                }
+                stack.push_back(o1);
+            }
+            break;
+
+            case Token::Type::LeftParenthesis:
+                stack.push_back(token);
+            break;
+            case Token::Type::RightParenThesis: {
+                bool match = false;
+
+                while(!stack.empty() && stack.back().type != Token::Type::LeftParenthesis) {
+                    queue.push_back(stack.back());
+                    stack.pop_back();
+                    match = true;
+                }
+
+                if(!match && stack.empty()) {
+                    cout << "Mismatched parenthesis1\n";
+                    return {};
+                }
+                stack.pop_back();
+            }
+            break;
+            //case Token::Type::Constant
+            default:
+                cout << "Error: " + token.str;
+                return {};
+        }
+    }
+
+    while(!stack.empty()) {
+            if(stack.back().type == Token::Type::LeftParenthesis) {
+                cout << "Mismatched parenthesis2\n";
+                return {};
+            }
+
+            queue.push_back(std::move(stack.back()));
+            stack.pop_back();
+    }
+    return queue;
+}
+
+
+int main() {
+    std::string test = "2+2";
+
+    std::deque<Token> dq = expressionToTokens(test);
+    printDeque(dq);
+    cout << "\n";
+    printDeque(shuntingYard(dq));
 }
