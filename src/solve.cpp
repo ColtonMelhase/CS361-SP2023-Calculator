@@ -52,7 +52,7 @@ std::deque<Token> expressionToTokens(std::string expr) {
             //nothing
         } else if(isdigit(*p)) { //digit
             const auto* b = p;
-            while(isdigit(*p)) {
+            while(isdigit(*p) || *p == '.') {
                 ++p;
             }
             const auto s = std::string(b, p);
