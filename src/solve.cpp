@@ -196,12 +196,88 @@ std::deque<Token> shuntingYard(const std::deque<Token>& tokens) {
     return queue;
 }
 
+//TODO solve(const std::string& expr)
+double solve(const std::string& expr) {
+    const auto tokens = expressionToTokens(expr);
+    auto queue = shuntingYard(tokens);
+    std::vector<double> stack;
+
+    while(!queue.empty()) {
+        std::string op;
+
+        const auto token = queue.front();
+        queue.pop_front();
+
+        switch(token.type) {
+            case Token::Type::Number:
+                stack.push_back(std::stod(token.str)); // convert token's string to double, push to stack
+                op = "Pushing " + token.str;
+            break;
+            case Token::Type::Operator: {
+                //if negative sign
+                if(token.unary) {
+                    const auto rhs = stack.back();
+                    stack.pop_back();
+                    //cout << std::endl << "Adding negative to " + std::to_string(rhs);
+                    switch(token.str[0]) {
+                        case 'm':
+                            stack.push_back(-rhs);
+                        break;
+                        default:
+                            //cout << std::endl << "Operator (unary) error: " + token.str;
+                            exit(0);
+                    }
+                    op = "Pushing (unary) " + token.str + " " + std::to_string(rhs);
+                }
+                else {  //operators
+                    //get 2 previous numbers
+                    const auto rhs = stack.back();
+                    stack.pop_back();
+
+                    const auto lhs = stack.back();
+                    stack.pop_back();
+                    
+                    switch(token.str[0]) {
+                        case '^':
+                            stack.push_back(static_cast<double>(pow(lhs, rhs)));
+                        break;
+                        case '*':
+                            stack.push_back(lhs * rhs);
+                        break;
+                        case '/':
+                            stack.push_back(lhs / rhs);
+                        break;
+                        case '+':
+                            stack.push_back(lhs + rhs);
+                        break;
+                        case '-':
+                            stack.push_back(lhs - rhs);
+                        break;
+                        default:
+                            cout << std::endl << "Operator error: " + token.str;
+                            exit(0);
+                    }
+                    op = "Pushing " + std::to_string(lhs) + " " + token.str + " " + std::to_string(rhs);
+                }
+            }
+            break;
+            default:
+                cout << "Token Error\n";
+                exit(0);
+        }
+        cout << std::endl << op;
+    }
+    return stack.back();
+}
 
 int main() {
-    std::string test = "2+2";
+    std::string test = "-3*2";
 
     std::deque<Token> dq = expressionToTokens(test);
+    double result;
     printDeque(dq);
     cout << "\n";
     printDeque(shuntingYard(dq));
+    result = solve(test);
+    cout << std::endl << "Result: " << result;
 }
