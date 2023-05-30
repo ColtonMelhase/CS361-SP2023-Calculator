@@ -19,7 +19,6 @@ class Token {
             Function,
             LeftParenthesis,
             RightParenThesis,
-            Unary,
             Unknown,
         };
 
@@ -29,12 +28,13 @@ class Token {
         bool rightAssociative;
         bool unary = false;
 
-        Token (Type t, std::string s, int prec = -1, bool ra = false, bool unary = false) {
-            type = t;
-            str = s;
-            precedence = prec;
-            rightAssociative = ra;
-        }
+        Token(Type type,const std::string& s, int precedence = -1, bool rightAssociative = false, bool unary = false)
+        : type { type }
+        , str ( s )
+        , precedence { precedence }
+        , rightAssociative { rightAssociative }
+        , unary { unary }
+        {}   
 };
 
 /*
