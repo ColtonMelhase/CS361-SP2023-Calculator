@@ -2,6 +2,7 @@
 #include <string>
 #include <deque>
 #include <iostream>
+#include <math.h>
 
 using std::cout;
 /*
@@ -75,7 +76,7 @@ std::deque<Token> expressionToTokens(std::string expr) {
 
             switch(c) {
                 default:
-                    break;
+                break;
                 case '(': t = Token::Type::LeftParenthesis; break;
                 case ')': t = Token::Type::RightParenThesis; break;
                 case '^': t = Token::Type::Operator; precedence = 4; rightAssociative = true; break;
@@ -96,7 +97,7 @@ std::deque<Token> expressionToTokens(std::string expr) {
                         t = Token::Type::Operator;
                         precedence = 2;
                     }
-                    break;
+                break;
             }
             auto s = std::string(1, c);
             tokens.push_back(Token {t, s, precedence, rightAssociative, unary});
@@ -157,7 +158,24 @@ std::deque<Token> shuntingYard(const std::deque<Token>& tokens) {
                 stack.push_back(o1);
             }
             break;
+            case Token::Type::Function: {
+                const auto o1 = token;
 
+                while(!stack.empty()) {
+                    const auto o2 = stack.back();
+
+                    if((!o1.rightAssociative && o1.precedence <= o2.precedence) ||
+                        (o1.rightAssociative && o1.precedence < o2.precedence)) {
+                            stack.pop_back();
+                            queue.push_back(o2);
+
+                            continue;
+                        }
+                        break;
+                }
+                stack.push_back(o1);
+            }
+            break;
             case Token::Type::LeftParenthesis:
                 stack.push_back(token);
             break;
@@ -271,10 +289,11 @@ double solve(const std::string& expr) {
 }
 
 int main() {
-    std::string test = "-3*2";
-
-    std::deque<Token> dq = expressionToTokens(test);
     double result;
+    std::string test = "(-3)*(-2^3)";
+    
+    std::deque<Token> dq = expressionToTokens(test);
+    
     printDeque(dq);
     cout << "\n";
     printDeque(shuntingYard(dq));
