@@ -36,6 +36,10 @@ class Token {
         , rightAssociative { rightAssociative }
         , unary { unary }
         {}   
+
+        std::string getStr() {
+            return str;
+        }
 };
 
 /*
@@ -129,7 +133,7 @@ void printDeque(std::deque<Token> dq) {
 
 //shunting yard algorithm
 //WIP
-//Can go through numbers, parenthesis and operators. Still need to add function, constant and variable support
+//Can go through numbers, parenthesis, operators and functions. Still need to add constant and variable support
 std::deque<Token> shuntingYard(const std::deque<Token>& tokens) {
     std::deque<Token> queue;
     std::vector<Token> stack;
@@ -220,6 +224,10 @@ double solve(const std::string& expr) {
     auto queue = shuntingYard(tokens);
     std::vector<double> stack;
 
+    double rhs;
+    double lhs;
+    double theta;
+
     while(!queue.empty()) {
         std::string op;
 
@@ -249,10 +257,10 @@ double solve(const std::string& expr) {
                 }
                 else {  //operators
                     //get 2 previous numbers
-                    const auto rhs = stack.back();
+                    rhs = stack.back();
                     stack.pop_back();
 
-                    const auto lhs = stack.back();
+                    lhs = stack.back();
                     stack.pop_back();
                     
                     switch(token.str[0]) {
@@ -279,6 +287,35 @@ double solve(const std::string& expr) {
                 }
             }
             break;
+            case Token::Type::Function:
+
+                theta = stack.back();
+                stack.pop_back();
+
+                if(token.str == "sin") {
+                    stack.push_back(sin(theta));
+                }
+                else if(token.str == "cos") {
+                    stack.push_back(cos(theta));
+                }
+                else if(token.str == "tan") {
+                    stack.push_back(tan(theta));
+                }
+                else if(token.str == "asin") {
+                    stack.push_back(asin(theta));
+                }
+                else if(token.str == "acos") {
+                    stack.push_back(acos(theta));
+                }
+                else if(token.str == "atan") {
+                    stack.push_back(atan(theta));
+                }
+                else {
+                    cout << std::endl << "Function Error\n";
+                    exit(0);
+                }
+                op = "Pushing " + token.str + "(" + std::to_string(theta) + ")";
+            break;
             default:
                 cout << "Token Error\n";
                 exit(0);
@@ -290,7 +327,7 @@ double solve(const std::string& expr) {
 
 int main() {
     double result;
-    std::string test = "(-3)*(-2^3)";
+    std::string test = "5+3*(4^2)+sin(2)-tan(50)+asin(0.5)";
     
     std::deque<Token> dq = expressionToTokens(test);
     
