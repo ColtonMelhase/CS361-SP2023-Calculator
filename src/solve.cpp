@@ -49,7 +49,7 @@ class Solver {
         //will implement two points to connect constant and variable storage classes
         //pointer1
         //pointer2
-        
+
         std::deque<Token> expressionToTokens(std::string expr);
         std::deque<Token> shuntingYard(const std::deque<Token>& tokens);
         void printDeque(std::deque<Token> dq);
@@ -345,6 +345,7 @@ double Solver::solve(const std::string& expr) {
     return stack.back();
 }
 
+/*
 int main() {
     double result;
     std::string test = "log(50)+ln(5)";
@@ -358,3 +359,4 @@ int main() {
     result = solver.solve(test);
     cout << std::endl << "Result: " << result;
 }
+*/
