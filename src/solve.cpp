@@ -342,13 +342,24 @@ double Solver::solve(const std::string& expr) {
         }
         cout << std::endl << op;
     }
+    while(stack.size() > 1) {
+        rhs = stack.back();
+        stack.pop_back();
+
+        lhs = stack.back();
+        stack.pop_back();
+
+        stack.push_back(lhs*rhs);
+    
+        printf("\nPushing implied multiply: %f * %f", lhs, rhs);
+    }
     return stack.back();
 }
 
 /*
 int main() {
     double result;
-    std::string test = "log(50)+ln(5)";
+    std::string test = "9log(3)";
     Solver solver;
 
     std::deque<Token> dq = solver.expressionToTokens(test);
