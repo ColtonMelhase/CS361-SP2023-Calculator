@@ -310,6 +310,12 @@ double solve(const std::string& expr) {
                 else if(token.str == "atan") {
                     stack.push_back(atan(theta));
                 }
+                else if(token.str == "ln") {
+                    stack.push_back(log(theta));
+                }
+                else if(token.str == "log") {
+                    stack.push_back(log10(theta));
+                }
                 else {
                     cout << std::endl << "Function Error\n";
                     exit(0);
@@ -327,7 +333,7 @@ double solve(const std::string& expr) {
 
 int main() {
     double result;
-    std::string test = "5+3*(4^2)+sin(2)-tan(50)+asin(0.5)";
+    std::string test = "log(50)+ln(5)";
     
     std::deque<Token> dq = expressionToTokens(test);
     
