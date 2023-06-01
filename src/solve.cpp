@@ -42,6 +42,20 @@ class Token {
         }
 };
 
+class Solver {
+    public:
+        Solver() {}
+
+        //will implement two points to connect constant and variable storage classes
+        //pointer1
+        //pointer2
+        
+        std::deque<Token> expressionToTokens(std::string expr);
+        std::deque<Token> shuntingYard(const std::deque<Token>& tokens);
+        void printDeque(std::deque<Token> dq);
+        double solve(const std::string& expr);
+
+};
 /*
 expressionToTokens takes expression string and tokenizes each
 element of the equation (numbers, operators, functions, variables, etc).
@@ -49,7 +63,7 @@ Returns deque of tokens that can now be processed by the shunting yard algorithm
 
 WIP
 */
-std::deque<Token> expressionToTokens(std::string expr) {
+std::deque<Token> Solver::expressionToTokens(std::string expr) {
     std::deque<Token> tokens;
 
     for(const auto* p = expr.c_str(); *p; ++p) {
@@ -134,7 +148,7 @@ void printDeque(std::deque<Token> dq) {
 //shunting yard algorithm
 //WIP
 //Can go through numbers, parenthesis, operators and functions. Still need to add constant and variable support
-std::deque<Token> shuntingYard(const std::deque<Token>& tokens) {
+std::deque<Token> Solver::shuntingYard(const std::deque<Token>& tokens) {
     std::deque<Token> queue;
     std::vector<Token> stack;
 
@@ -219,7 +233,7 @@ std::deque<Token> shuntingYard(const std::deque<Token>& tokens) {
 }
 
 //TODO solve(const std::string& expr)
-double solve(const std::string& expr) {
+double Solver::solve(const std::string& expr) {
     const auto tokens = expressionToTokens(expr);
     auto queue = shuntingYard(tokens);
     std::vector<double> stack;
@@ -334,12 +348,13 @@ double solve(const std::string& expr) {
 int main() {
     double result;
     std::string test = "log(50)+ln(5)";
-    
-    std::deque<Token> dq = expressionToTokens(test);
+    Solver solver;
+
+    std::deque<Token> dq = solver.expressionToTokens(test);
     
     printDeque(dq);
     cout << "\n";
-    printDeque(shuntingYard(dq));
-    result = solve(test);
+    printDeque(solver.shuntingYard(dq));
+    result = solver.solve(test);
     cout << std::endl << "Result: " << result;
 }
