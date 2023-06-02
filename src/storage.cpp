@@ -30,6 +30,7 @@ int main() {
 
     //redefining a
     store.setVarValue("a", 5.625);
+    //defining b
     store.setVarValue("b", 30.5);
 
     //get variable value
