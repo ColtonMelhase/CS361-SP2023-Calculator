@@ -1,8 +1,10 @@
-#include "constants.h"
+//#include "constants.h"
 #include <string>
 #include <deque>
 #include <iostream>
 #include <math.h>
+
+#include "storage.cpp"
 
 using std::cout;
 /*
@@ -44,17 +46,17 @@ class Token {
 
 class Solver {
     public:
-        Solver() {}
+        VarStorage* storage;
+        
+        Solver(VarStorage* st) {
+            storage = st;
+        }
 
-        //will implement two points to connect constant and variable storage classes
-        //pointer1
-        //pointer2
-
-        std::deque<Token> expressionToTokens(std::string expr);
-        std::deque<Token> shuntingYard(const std::deque<Token>& tokens);
         void printDeque(std::deque<Token> dq);
         double solve(const std::string& expr);
-
+    private:
+        std::deque<Token> expressionToTokens(std::string expr);
+        std::deque<Token> shuntingYard(const std::deque<Token>& tokens);
 };
 /*
 expressionToTokens takes expression string and tokenizes each
@@ -342,24 +344,13 @@ double Solver::solve(const std::string& expr) {
         }
         cout << std::endl << op;
     }
-    while(stack.size() > 1) {
-        rhs = stack.back();
-        stack.pop_back();
-
-        lhs = stack.back();
-        stack.pop_back();
-
-        stack.push_back(lhs*rhs);
-    
-        printf("\nPushing implied multiply: %f * %f", lhs, rhs);
-    }
     return stack.back();
 }
 
 /*
 int main() {
     double result;
-    std::string test = "9log(3)";
+    std::string test = "log(50)+ln(5)";
     Solver solver;
 
     std::deque<Token> dq = solver.expressionToTokens(test);
