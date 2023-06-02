@@ -11,12 +11,7 @@ class VarStorage {
 };
 
 void VarStorage::setVarValue(std::string key, double val) {
-    if(!contains(key)) {
-        vars[key] = val;
-    }
-    else {
-        printf("\nVariable already defined\n");
-    }
+    vars[key] = val;
 }
 
 double VarStorage::getVarValue(std::string key) {
@@ -33,9 +28,11 @@ int main() {
     //testing set variable feature a = 20
     store.setVarValue("a", 20);
 
-    //testing to make sure not to redefine already defined variables
-    store.setVarValue("a", 5);
+    //redefining a
+    store.setVarValue("a", 5.625);
+    store.setVarValue("b", 30.5);
 
     //get variable value
-    printf("The value of variable'a' is %f", store.getVarValue("a"));
+    printf("\nThe value of variable 'a' is %f", store.getVarValue("a"));
+    printf("\nThe value of variable 'b' is %f", store.getVarValue("b"));
 }
