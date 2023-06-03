@@ -345,6 +345,7 @@ double Solver::solve(const std::string& expr) {
         }
         cout << std::endl << op;
     }
+    cout << std::endl << "Result: " << stack.back();
     return stack.back();
 }
 
