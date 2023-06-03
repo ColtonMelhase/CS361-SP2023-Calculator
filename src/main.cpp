@@ -11,6 +11,10 @@ int main() {
   InitWindow(screenWidth, screenHeight, "Calculator");
   SetTargetFPS(60);
 
+  // Initalize objects
+  VarStorage varStorage;
+  Solver solver(&varStorage);
+
   // Initialize variables
   std::vector<std::string> history;
   std::vector<std::string> buttons = {"sin(", "(", ")", "delete", "1", "2", "3",
@@ -25,7 +29,7 @@ int main() {
     if (GetInput(history, keypadRect, buttons, keypadKeyWrap)) {
       // Solve second to last entry in history
       // because last entry is current input
-      // Solve(history[history.size() - 2]);
+      history.push_back(std::to_string(solver.solve(history[history.size() - 2])));
     }
 
     BeginDrawing();
