@@ -22,6 +22,7 @@ bool VarStorage::contains(std::string key) {
     return vars.count(key);
 }
 
+/*
 int main() {
     VarStorage store;
 
@@ -37,3 +38,4 @@ int main() {
     printf("\nThe value of variable 'a' is %f", store.getVarValue("a"));
     printf("\nThe value of variable 'b' is %f", store.getVarValue("b"));
 }
+*/
