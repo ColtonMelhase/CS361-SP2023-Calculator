@@ -345,6 +345,17 @@ double Solver::solve(const std::string& expr) {
         }
         cout << std::endl << op;
     }
+    while(stack.size() > 1) {
+        rhs = stack.back();
+        stack.pop_back();
+
+        lhs = stack.back();
+        stack.pop_back();
+
+        stack.push_back(lhs * rhs);
+
+        printf("\nPushing implied multiply: %f * %f = %f", lhs, rhs, lhs*rhs);
+    }
     cout << std::endl << "Result: " << stack.back();
     return stack.back();
 }
