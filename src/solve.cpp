@@ -1,6 +1,7 @@
 //#include "constants.h"
 #include <string>
 #include <deque>
+#include <vector>
 #include <iostream>
 #include <math.h>
 
