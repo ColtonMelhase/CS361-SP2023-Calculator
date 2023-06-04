@@ -267,7 +267,7 @@ double Solver::solve(const std::string& expr) {
                         break;
                         default:
                             //cout << std::endl << "Operator (unary) error: " + token.str;
-                            exit(0);
+                            //exit(0);
                     }
                     op = "Pushing (unary) " + token.str + " " + std::to_string(rhs);
                 }
@@ -297,7 +297,7 @@ double Solver::solve(const std::string& expr) {
                         break;
                         default:
                             cout << std::endl << "Operator error: " + token.str;
-                            exit(0);
+                            //exit(0);
                     }
                     op = "Pushing " + std::to_string(lhs) + " " + token.str + " " + std::to_string(rhs);
                 }
@@ -334,13 +334,13 @@ double Solver::solve(const std::string& expr) {
                 }
                 else {
                     cout << std::endl << "Function Error\n";
-                    exit(0);
+                    //exit(0);
                 }
                 op = "Pushing " + token.str + "(" + std::to_string(theta) + ")";
             break;
             default:
                 cout << "Token Error\n";
-                exit(0);
+                //exit(0);
         }
         cout << std::endl << op;
     }
