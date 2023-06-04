@@ -90,7 +90,7 @@ std::deque<Token> Solver::expressionToTokens(std::string expr) {
                 tokens.push_back(Token{Token::Type::Number, std::to_string(storage.getVarValue(s))});
             }
             else { //function
-            tokens.push_back(Token {Token::Type::Function, s, 4, false, false});
+                tokens.push_back(Token {Token::Type::Function, s, 4, false, false});
             }
             --p;
         } else { //operator
