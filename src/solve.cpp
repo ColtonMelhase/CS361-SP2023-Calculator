@@ -80,6 +80,16 @@ std::deque<Token> Solver::expressionToTokens(std::string expr) {
             tokens.push_back(Token {Token::Type::Number, s});
             --p;
         } else if(isalpha(*p)){  //variable or function
+
+            //checking for implied multiplication
+            if(!tokens.empty()) {
+                switch(tokens.back().type) {
+                case Token::Type::Number:
+                    tokens.push_back(Token {Token::Type::Operator, "*", 3, false, false});
+                break;
+                }
+            }
+            
             const auto* b = p;
             while(isalpha(*p)) {
                 ++p;
