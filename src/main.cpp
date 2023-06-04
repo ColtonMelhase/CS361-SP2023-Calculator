@@ -17,12 +17,14 @@ int main() {
 
   // Initialize variables
   std::vector<std::string> history;
-  std::vector<std::string> buttons = {"sin(", "(", ")", "delete", "1", "2", "3",
-                                      "+",    "4", "5", "6",      "-", "7", "8",
-                                      "9",    "*", "0", ".",      "=", "/"};
+  std::vector<std::string> buttons = {" ", " ", " ", "(", ")", "del", "clear",
+                                      " ", "sin(", "^", "1", "2", "3", "+",
+                                      "pi", "cos(", "^1/2", "4", "5", "6", "-",
+                                      "e", "tan(", "log(", "7", "8", "9", "*",
+                                      " ", " ", "ln(", "0", ".", "=", "/",};
   Rectangle keypadRect = {0, (float)screenHeight * .6, screenWidth,
                           (float)screenHeight * (1 - .6)};
-  int keypadKeyWrap = 4;
+  int keypadKeyWrap = 7;
   history.push_back("");
 
   while (!WindowShouldClose()) {
