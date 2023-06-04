@@ -165,7 +165,9 @@ std::deque<Token> Solver::shuntingYard(const std::deque<Token>& tokens) {
             case Token::Type::Number:
                 queue.push_back(token);
                 break;
-            
+            case Token::Type::Variable:
+                queue.push_back(token);
+                break;
             case Token::Type::Operator: {
                 const auto o1 = token;
 
