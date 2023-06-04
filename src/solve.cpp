@@ -46,10 +46,10 @@ class Token {
 
 class Solver {
     public:
-        VarStorage* storage;
+        VarStorage storage;
         
-        Solver(VarStorage* st) {
-            storage = st;
+        Solver() {
+            storage = VarStorage();
         }
 
         void printDeque(std::deque<Token> dq);
