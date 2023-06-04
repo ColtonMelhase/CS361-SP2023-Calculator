@@ -12,8 +12,8 @@ int main() {
   SetTargetFPS(60);
 
   // Initalize objects
-  VarStorage varStorage;
-  Solver solver(&varStorage);
+  
+  Solver solver;
 
   // Initialize variables
   std::vector<std::string> history;
