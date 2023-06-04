@@ -11,7 +11,7 @@ class VarStorage {
         }
         void setVarValue(std::string key, double val);  // set value of variable ex: x = 5 : setVarValue("x", 5)
         double getVarValue(std::string key);            // get value of variable ex: getVarValue("x") returns 5
-        bool contains(std::string key);                 // returns true/false if the map already contains a variable name (not currently used, but may be needed if we want to warn
+        bool contains(std::string key);                 // returns true/false if the map already contains a variable name (may be needed if we want to warn
                                                         // the user that they have redefined/overwritten an already defined variable for example)
     private:
         std::map<std::string, double> vars;
