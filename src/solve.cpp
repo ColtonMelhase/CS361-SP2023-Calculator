@@ -79,13 +79,19 @@ std::deque<Token> Solver::expressionToTokens(std::string expr) {
             const auto s = std::string(b, p);
             tokens.push_back(Token {Token::Type::Number, s});
             --p;
-        } else if(isalpha(*p)){ //function (sin, tan, etc)
+        } else if(isalpha(*p)){  //variable or function
             const auto* b = p;
             while(isalpha(*p)) {
                 ++p;
             }
             const auto s = std::string(b, p);
+
+            if(storage.contains(s)) { //variable
+                tokens.push_back(Token{Token::Type::Number, std::to_string(storage.getVarValue(s))});
+            }
+            else { //function
             tokens.push_back(Token {Token::Type::Function, s, 4, false, false});
+            }
             --p;
         } else { //operator
             Token::Type t = Token::Type::Unknown;
