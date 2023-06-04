@@ -4,7 +4,6 @@
 #include <vector>
 #include <iostream>
 #include <math.h>
-
 #include "storage.cpp"
 
 using std::cout;
@@ -345,6 +344,7 @@ double Solver::solve(const std::string& expr) {
         }
         cout << std::endl << op;
     }
+    //check for implied mutliplication
     while(stack.size() > 1) {
         rhs = stack.back();
         stack.pop_back();
@@ -356,6 +356,8 @@ double Solver::solve(const std::string& expr) {
 
         printf("\nPushing implied multiply: %f * %f = %f", lhs, rhs, lhs*rhs);
     }
+
+    //return result
     cout << std::endl << "Result: " << stack.back();
     return stack.back();
 }
