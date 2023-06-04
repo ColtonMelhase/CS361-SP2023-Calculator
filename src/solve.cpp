@@ -273,7 +273,7 @@ double Solver::solve(const std::string& expr) {
                         case 'm':
                             stack.push_back(-rhs);
                         break;
-                        default:
+                        //default:
                             //cout << std::endl << "Operator (unary) error: " + token.str;
                             //exit(0);
                     }
