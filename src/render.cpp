@@ -39,7 +39,7 @@ void DrawButtons(Rectangle rect, std::vector<std::string> buttons, int wrap) {
     DrawButton(buttons[i], button);
   }
 
-  DrawRectangleLinesEx(rect, 2, BLACK);
+  DrawRectangleLinesEx(rect, 2, LIGHTGRAY);
 }
 
 // Draws a square button with centered text
@@ -58,7 +58,7 @@ void DrawButton(std::string name, Rectangle rect, Color bg_color) {
     }
   }
 
-  DrawRectangleRec(rect, LIGHTGRAY);
+  DrawRectangleRec(rect, bg_color);
   DrawText(name.c_str(), offset.x, offset.y, fontSize, BLACK);
 
   if (hover) {
