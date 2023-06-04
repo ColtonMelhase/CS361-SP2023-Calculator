@@ -61,14 +61,20 @@ bool GetInput(std::vector<std::string> &history, Rectangle rect,
     return true;
   }
   // if backspace is pressed
-  else if (IsKeyPressed(KEY_BACKSPACE) || output == "delete") {
+  else if (IsKeyPressed(KEY_BACKSPACE) || output == "del") {
     if (history.back().size()) {
       history.back().pop_back();
     }
+    return false;
+  }
+  // if clear is pressed
+  else if (output == "clear") {
+    history.back().clear();
     return false;
   } else {
     output.append(GetCharsPressed());
     history.back().append(output);
     return false;
   }
+  
 }

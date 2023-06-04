@@ -1,9 +1,9 @@
 //#include "constants.h"
 #include <string>
 #include <deque>
+#include <vector>
 #include <iostream>
 #include <math.h>
-
 #include "storage.cpp"
 
 using std::cout;
@@ -46,10 +46,10 @@ class Token {
 
 class Solver {
     public:
-        VarStorage* storage;
+        VarStorage storage;
         
-        Solver(VarStorage* st) {
-            storage = st;
+        Solver() {
+            storage = VarStorage();
         }
 
         void printDeque(std::deque<Token> dq);
@@ -79,13 +79,29 @@ std::deque<Token> Solver::expressionToTokens(std::string expr) {
             const auto s = std::string(b, p);
             tokens.push_back(Token {Token::Type::Number, s});
             --p;
-        } else if(isalpha(*p)){ //function (sin, tan, etc)
+        } else if(isalpha(*p)){  //variable or function
+
+            //checking for implied multiplication
+            if(!tokens.empty()) {
+                switch(tokens.back().type) {
+                case Token::Type::Number:
+                    tokens.push_back(Token {Token::Type::Operator, "*", 3, false, false});
+                break;
+                }
+            }
+            
             const auto* b = p;
             while(isalpha(*p)) {
                 ++p;
             }
             const auto s = std::string(b, p);
-            tokens.push_back(Token {Token::Type::Function, s, 4, false, false});
+
+            if(storage.contains(s)) { //variable
+                tokens.push_back(Token{Token::Type::Number, std::to_string(storage.getVarValue(s))});
+            }
+            else { //function
+                tokens.push_back(Token {Token::Type::Function, s, 4, false, false});
+            }
             --p;
         } else { //operator
             Token::Type t = Token::Type::Unknown;
@@ -159,7 +175,9 @@ std::deque<Token> Solver::shuntingYard(const std::deque<Token>& tokens) {
             case Token::Type::Number:
                 queue.push_back(token);
                 break;
-            
+            case Token::Type::Variable:
+                queue.push_back(token);
+                break;
             case Token::Type::Operator: {
                 const auto o1 = token;
 
@@ -265,9 +283,9 @@ double Solver::solve(const std::string& expr) {
                         case 'm':
                             stack.push_back(-rhs);
                         break;
-                        default:
+                        //default:
                             //cout << std::endl << "Operator (unary) error: " + token.str;
-                            exit(0);
+                            //exit(0);
                     }
                     op = "Pushing (unary) " + token.str + " " + std::to_string(rhs);
                 }
@@ -297,7 +315,7 @@ double Solver::solve(const std::string& expr) {
                         break;
                         default:
                             cout << std::endl << "Operator error: " + token.str;
-                            exit(0);
+                            //exit(0);
                     }
                     op = "Pushing " + std::to_string(lhs) + " " + token.str + " " + std::to_string(rhs);
                 }
@@ -334,23 +352,38 @@ double Solver::solve(const std::string& expr) {
                 }
                 else {
                     cout << std::endl << "Function Error\n";
-                    exit(0);
+                    //exit(0);
                 }
                 op = "Pushing " + token.str + "(" + std::to_string(theta) + ")";
             break;
             default:
                 cout << "Token Error\n";
-                exit(0);
+                //exit(0);
         }
         cout << std::endl << op;
     }
+    //check for implied mutliplication
+    while(stack.size() > 1) {
+        rhs = stack.back();
+        stack.pop_back();
+
+        lhs = stack.back();
+        stack.pop_back();
+
+        stack.push_back(lhs * rhs);
+
+        printf("\nPushing implied multiply: %f * %f = %f", lhs, rhs, lhs*rhs);
+    }
+
+    //return result
+    cout << std::endl << "Result: " << stack.back();
     return stack.back();
 }
 
 /*
 int main() {
     double result;
-    std::string test = "log(50)+ln(5)";
+    std::string test = "pi(3)+tanr(4)";
     Solver solver;
 
     std::deque<Token> dq = solver.expressionToTokens(test);
@@ -359,6 +392,5 @@ int main() {
     cout << "\n";
     printDeque(solver.shuntingYard(dq));
     result = solver.solve(test);
-    cout << std::endl << "Result: " << result;
 }
 */
