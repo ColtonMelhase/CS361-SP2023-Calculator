@@ -37,8 +37,8 @@ int main() {
 
     DrawDisplay(history);
 
-    DrawText("Calculator", (int)textDisplay.x, (int)textDisplay.y - 40, 24,
-             BLACK);
+    //DrawText("Calculator", (int)textDisplay.x, (int)textDisplay.y - 40, 24,
+             //BLACK);
 
     DrawRectangleLines((int)textDisplay.x, (int)textDisplay.y,
                        (int)textDisplay.width, (int)textDisplay.height,
