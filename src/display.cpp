@@ -7,10 +7,7 @@
 
 class Display {
 public:
-  std::string inputBuffer;
-  std::string result;
   bool radians = false;
-  bool inverseTrig = false;
 
   // is true when the display has a problem ready to solve
   bool readyToSolve = false;
@@ -26,6 +23,7 @@ private:
   Keypad keypad;
   Vector2 displaySize;
   std::vector<IoBlock> history;
+  bool inverseTrig = false;
 
   void processInput();
   std::string GetCharsPressed();

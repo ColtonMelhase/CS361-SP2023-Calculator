@@ -24,6 +24,7 @@ int main() {
 
     if (display.readyToSolve) {
       std::string problem = display.getProblem();
+      // display.radians
       display.solution(std::to_string(solver.solve(problem)));
     }
 
