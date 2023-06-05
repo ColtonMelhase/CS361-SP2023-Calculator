@@ -51,16 +51,16 @@ Display::Display() : keypad(0, 0, 0, 0) {
   keypad.addButton("const", pos);
 
   pos++;
-  keypad.addButton("sin", pos);
-  keypad.addButton("cos", pos);
-  keypad.addButton("tan", pos);
+  keypad.addButton("sin(", pos);
+  keypad.addButton("cos(", pos);
+  keypad.addButton("tan(", pos);
 
   pos++;
   keypad.addButton("varx", pos);
   keypad.addButton("^", pos);
   keypad.addButton("^(0.5)", pos);
-  keypad.addButton("log", pos);
-  keypad.addButton("ln", pos);
+  keypad.addButton("log(", pos);
+  keypad.addButton("ln(", pos);
 
   pos++;
   keypad.addButton("(", pos);
