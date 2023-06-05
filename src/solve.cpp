@@ -150,7 +150,7 @@ string test = "-59+4*5/2-110"
 ->
 ['m', '59', '+', '4', '*', '5', '/', '2', '-', '110']
 */
-void printDeque(std::deque<Token> dq) {
+void Solver::printDeque(std::deque<Token> dq) {
     cout << "[";
     for(int i = 0; i < dq.size(); i++) {
         cout << "'" + dq.at(i).str;
