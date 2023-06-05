@@ -147,6 +147,7 @@ void Display::processInput() {
     }
   }
 
+  // test for special input e.g. delete, clear, and radians
   if (IsKeyPressed(KEY_BACKSPACE) || input == "del") {
     if (history.back().input.label.empty())
       return;
@@ -171,6 +172,8 @@ void Display::processInput() {
   } else if (input == "const") {
 
   } else if (input == "varx") {
+
+  } else if (input == "hist") {
 
   } else {
     history.back().input.label.append(input);
