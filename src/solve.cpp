@@ -390,15 +390,9 @@ double Solver::solve(const std::string& expr) {
 
 /*
 int main() {
-    double result;
-    std::string test = "pi(3)+tanr(4)";
+    std::string test = "pi(5)";
     Solver solver;
-
-    std::deque<Token> dq = solver.expressionToTokens(test);
     
-    printDeque(dq);
-    cout << "\n";
-    printDeque(solver.shuntingYard(dq));
-    result = solver.solve(test);
+    solver.solve(test);
 }
 */
