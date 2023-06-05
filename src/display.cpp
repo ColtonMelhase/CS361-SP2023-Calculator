@@ -58,7 +58,7 @@ Display::Display() : keypad(0, 0, 0, 0) {
   pos++;
   keypad.addButton("varx", pos);
   keypad.addButton("^", pos);
-  keypad.addButton("sqrt", pos);
+  keypad.addButton("^(0.5)", pos);
   keypad.addButton("log", pos);
   keypad.addButton("ln", pos);
 
