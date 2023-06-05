@@ -134,7 +134,7 @@ void Display::processInput() {
     if (history[i].input.pressed()) {
       history.back().input.label.append(history[i].input.label);
     } else if (history[i].output.pressed()) {
-      history.back().input.label.append(history[i].input.label);
+      history.back().input.label.append(history[i].output.label);
     }
   }
 
