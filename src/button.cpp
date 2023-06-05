@@ -62,11 +62,7 @@ void Button::draw() {
 }
 
 void Button::setLabel(std::string buttonLabel) {
-  if (center) {
-    textWidth = MeasureText(buttonLabel.c_str(), fontSize);
-  } else {
-    textWidth = 0;
-  }
+  textWidth = MeasureText(buttonLabel.c_str(), fontSize);
 
   setTextOffset();
 
@@ -89,6 +85,11 @@ void Button::setPostion(float x, float y, float width, float height) {
 }
 
 void Button::setTextOffset() {
-  textOffset = {rect.x + rect.width / 2 - (float)textWidth / 2,
-                rect.y + rect.height / 2 - (float)fontSize / 2};
+  if (center) {
+    textOffset = {rect.x + rect.width / 2 - (float)textWidth / 2,
+                  rect.y + rect.height / 2 - (float)fontSize / 2};
+  } else {
+    textOffset = {rect.x + fontSize,
+                  rect.y + rect.height / 2 - (float)fontSize / 2};
+  }
 }

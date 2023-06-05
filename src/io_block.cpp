@@ -62,7 +62,7 @@ void IoBlock::draw() {
 
   input.draw();
   output.draw();
-  DrawRectangleLinesEx(rect, 5, BLACK);
+  DrawRectangleLinesEx(rect, 2, BLACK);
 }
 
 void IoBlock::update() {
