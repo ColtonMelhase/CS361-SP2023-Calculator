@@ -254,8 +254,16 @@ std::deque<Token> Solver::shuntingYard(const std::deque<Token>& tokens) {
 
 //TODO solve(const std::string& expr)
 double Solver::solve(const std::string& expr) {
+    cout << "\nSolving expression: " << expr << std::endl;
+
     const auto tokens = expressionToTokens(expr);
+    printf("\nTokenized expression:\n");
+    printDeque(tokens);
+
     auto queue = shuntingYard(tokens);
+    printf("\nPostfix expression:\n");
+    printDeque(queue);
+
     std::vector<double> stack;
 
     double rhs;
