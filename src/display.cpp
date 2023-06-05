@@ -12,6 +12,7 @@ public:
   bool radians = false;
   bool inverseTrig = false;
 
+  // is true when the display has a problem ready to solve
   bool readyToSolve = false;
 
   Display();
@@ -30,6 +31,9 @@ private:
   std::string GetCharsPressed();
 };
 
+// sets up the display and currently adds the buttons to the display
+// will likly need to add buttons elsewhere in the future for
+// organization and so they can be swaped out live
 Display::Display() : keypad(0, 0, 0, 0) {
   Vector2 displaySize = {(float)GetScreenWidth(), (float)GetScreenHeight()};
   keypad.setRect(0, displaySize.y / 2, displaySize.x, displaySize.y / 2);
@@ -88,6 +92,7 @@ Display::Display() : keypad(0, 0, 0, 0) {
   keypad.addButton("hist", pos);
 }
 
+// updates UI elements and proccesses user input
 void Display::update() {
   displaySize = {(float)GetScreenWidth(), (float)GetScreenHeight()};
   keypad.setRect(0, displaySize.y / 2, displaySize.x, displaySize.y / 2);
@@ -100,6 +105,7 @@ void Display::update() {
   processInput();
 }
 
+// Draws the display including keypad and input/output
 void Display::draw() {
   for (int i = 0; i < history.size(); i++) {
     history[i].draw();
@@ -108,9 +114,9 @@ void Display::draw() {
   keypad.draw();
 }
 
+// gets current problem from the ui will return the same answer until solution
+// is called or the problem is updated
 std::string Display::getProblem() {
-  readyToSolve = false;
-
   for (int i = 0; i < history.size(); i++) {
     if (history[i].output.label == "") {
       return history[i].input.label;
@@ -120,6 +126,8 @@ std::string Display::getProblem() {
   return history[0].output.label;
 }
 
+// updates the display to show the result of the problem and
+// prepares for new input
 void Display::solution(std::string solution) {
   history.back().output.label = solution;
   history.push_back(IoBlock());
@@ -128,6 +136,7 @@ void Display::solution(std::string solution) {
   update();
 }
 
+// process all input from the display and update the current display input
 void Display::processInput() {
   std::string input = keypad.getKepadInput();
   input.append(GetCharsPressed());

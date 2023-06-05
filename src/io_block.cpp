@@ -1,10 +1,11 @@
 #include "button.h"
 #include "include/raylib.h"
 
+// used by the display to show user input and solutions e.g. input output
 class IoBlock {
 public:
-  Button input;
-  Button output;
+  Button input;  // the input that will be displayed
+  Button output; // the output that will be displayed
 
   IoBlock(Rectangle = {0, 0, 0, 0});
   IoBlock(Vector2, Vector2);
