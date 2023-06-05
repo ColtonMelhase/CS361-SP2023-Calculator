@@ -27,6 +27,7 @@ private:
   std::vector<IoBlock> history;
 
   void processInput();
+  std::string GetCharsPressed();
 };
 
 Display::Display() : keypad(0, 0, 0, 0) {
@@ -129,6 +130,7 @@ void Display::solution(std::string solution) {
 
 void Display::processInput() {
   std::string input = keypad.getKepadInput();
+  input.append(GetCharsPressed());
 
   for (int i = 0; i < history.size(); i++) {
     if (history[i].input.pressed()) {
@@ -138,19 +140,17 @@ void Display::processInput() {
     }
   }
 
-  if (input.length() == 0)
-    return;
-
-  if (input == "clear") {
-    history.back().input.label.clear();
-
-  } else if (input == "del") {
+  if (IsKeyPressed(KEY_BACKSPACE) || input == "del") {
     if (history.back().input.label.empty())
       return;
     history.back().input.label.pop_back();
 
-  } else if (input == "=") {
+  } else if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_KP_EQUAL) ||
+             input == "=") {
     readyToSolve = true;
+
+  } else if (input == "clear") {
+    history.back().input.label.clear();
 
   } else if (input == "mode") {
     radians = !radians;
@@ -166,7 +166,18 @@ void Display::processInput() {
   } else if (input == "varx") {
 
   } else {
-    std::cout << input << std::endl;
     history.back().input.label.append(input);
   }
+}
+
+// Gets keyboboard input and returns a string
+std::string Display::GetCharsPressed() {
+  std::string input;
+  char character = GetCharPressed();
+  while (character > 0) {
+    input.push_back(character);
+    character = GetCharPressed();
+  }
+
+  return input;
 }
