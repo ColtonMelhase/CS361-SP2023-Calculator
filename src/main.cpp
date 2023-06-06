@@ -28,8 +28,7 @@ int main() {
       try {
         std::string expr = std::to_string(solver.solve(problem));
         display.solution(expr);
-      }
-      catch(int errorCode) {
+      } catch (int errorCode) {
         display.readyToSolve = false;
         cout << "Error #: " + errorCode;
         display.solution("Error: " + errorCode);

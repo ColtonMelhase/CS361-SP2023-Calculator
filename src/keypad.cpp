@@ -6,6 +6,8 @@
 
 class Keypad {
 public:
+  std::vector<int> mask;
+
   Keypad(Rectangle);
   Keypad(Vector2, Vector2);
   Keypad(float, float, float, float);
@@ -58,6 +60,12 @@ void Keypad::addButton(std::string label, int x) {
 
   while (x >= buttons.size()) {
     buttons.push_back(std::vector<Button>());
+
+    if (mask.size() > 0) {
+      mask.push_back(mask.back() + 1);
+    } else {
+      mask.push_back(0);
+    }
   }
 
   buttons[x].push_back(Button(label, 0, 0, 0, 0));
@@ -66,10 +74,10 @@ void Keypad::addButton(std::string label, int x) {
 std::string Keypad::getKepadInput() {
   update();
 
-  for (int x = 0; x < buttons.size(); x++) {
-    for (int y = 0; y < buttons[x].size(); y++) {
-      if (buttons[x][y].pressed()) {
-        return buttons[x][y].label;
+  for (int x = 0; x < mask.size(); x++) {
+    for (int y = 0; y < buttons[mask[x]].size(); y++) {
+      if (buttons[mask[x]][y].pressed()) {
+        return buttons[mask[x]][y].label;
       }
     }
   }
@@ -80,9 +88,9 @@ std::string Keypad::getKepadInput() {
 void Keypad::draw() {
   update();
 
-  for (int x = 0; x < buttons.size(); x++) {
-    for (int y = 0; y < buttons[x].size(); y++) {
-      buttons[x][y].draw();
+  for (int x = 0; x < mask.size(); x++) {
+    for (int y = 0; y < buttons[mask[x]].size(); y++) {
+      buttons[mask[x]][y].draw();
     }
   }
 
@@ -95,14 +103,15 @@ void Keypad::update() {
 
   updateRequired = false;
 
-  int horizontalCount = buttons.size();
+  int horizontalCount = mask.size();
   for (int x = 0; x < horizontalCount; x++) {
-    int verticleCount = buttons[x].size();
+    int verticleCount = buttons[mask[x]].size();
     for (int y = 0; y < verticleCount; y++) {
-      buttons[x][y].setPostion(rect.x + rect.width * x / (float)horizontalCount,
-                               rect.y + rect.height * y / (float)verticleCount,
-                               rect.width / (float)horizontalCount,
-                               rect.height / (float)verticleCount);
+      buttons[mask[x]][y].setPostion(
+          rect.x + rect.width * x / (float)horizontalCount,
+          rect.y + rect.height * y / (float)verticleCount,
+          rect.width / (float)horizontalCount,
+          rect.height / (float)verticleCount);
     }
   }
 }
