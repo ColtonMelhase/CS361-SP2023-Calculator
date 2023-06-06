@@ -42,12 +42,16 @@ Display::Display() : keypad(0, 0, 0, 0) {
   keypad.addButton("mode", pos);
   keypad.addButton("inv", pos);
   keypad.addButton("store", pos);
+  keypad.addButton("shapes", pos);
+
+  pos++;
+  keypad.addButton("shapes", pos);
 
   pos++;
   keypad.addButton("d/dx", pos);
   keypad.addButton("pi", pos);
   keypad.addButton("e", pos);
-  keypad.addButton("shapes", pos);
+  keypad.addButton("const", pos);
 
   pos++;
   keypad.addButton("squareArea(", pos);
@@ -116,7 +120,7 @@ Display::Display() : keypad(0, 0, 0, 0) {
   keypad.addButton("/", pos);
 
   // hide buttons
-  keypad.mask = {0, 1, 4, 5, 6, 7, 8, 9};
+  keypad.mask = {0, 2, 5, 6, 7, 8, 9, 10};
 }
 
 // updates UI elements and proccesses user input
@@ -202,9 +206,9 @@ void Display::processInput() {
     shape_mode = !shape_mode;
 
     if (shape_mode) {
-      keypad.mask = {1, 2, 3};
+      keypad.mask = {1, 3, 4};
     } else {
-      keypad.mask = {0, 1, 4, 5, 6, 7, 8, 9};
+      keypad.mask = {0, 2, 5, 6, 7, 8, 9, 10};
     }
 
   } else if (input == "varx") {
