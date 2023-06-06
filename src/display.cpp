@@ -47,7 +47,7 @@ Display::Display() : keypad(0, 0, 0, 0) {
   keypad.addButton("d/dx", pos);
   keypad.addButton("pi", pos);
   keypad.addButton("e", pos);
-  keypad.addButton("const", pos);
+  keypad.addButton("shapes", pos);
 
   pos++;
   keypad.addButton("squareArea(", pos);
@@ -198,7 +198,7 @@ void Display::processInput() {
   } else if (input == "store") {
     std::cout << "Store not implemetned" << std::endl;
 
-  } else if (input == "const") {
+  } else if (input == "shapes") {
     shape_mode = !shape_mode;
 
     if (shape_mode) {
