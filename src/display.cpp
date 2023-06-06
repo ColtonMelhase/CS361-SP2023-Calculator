@@ -62,7 +62,7 @@ Display::Display() : keypad(0, 0, 0, 0) {
   keypad.addButton("cubeSurfaceArea(", pos);
   keypad.addButton("cubeVolume(", pos);
 
-  keypad.addButton("rectangularPrismSurfaceArea", pos);
+  keypad.addButton("rectangularPrismSurfaceArea(", pos);
   keypad.addButton("rectangularPrismVolume(", pos);
 
   pos++;
