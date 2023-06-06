@@ -9,7 +9,9 @@
 
 int main() {
 
+  SetConfigFlags(FLAG_WINDOW_RESIZABLE);
   InitWindow(screenWidth, screenHeight, "Calculator");
+  MaximizeWindow();
   SetTargetFPS(60);
 
   // Initalize objects
