@@ -109,9 +109,9 @@ std::deque<Token> Solver::expressionToTokens(std::string expr) {
       const auto s = std::string(b, p);
 
       // check if var or function
-      if (storage.contains(s)) { // variable
+      if (storage->contains(s)) { // variable
         tokens.push_back(
-            Token{Token::Type::Number, std::to_string(storage.getVarValue(s))});
+            Token{Token::Type::Number, std::to_string(storage->contains(s))});
       } else { // function
         tokens.push_back(Token{Token::Type::Function, s, 4, false, false});
       }
