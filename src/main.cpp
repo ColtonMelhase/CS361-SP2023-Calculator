@@ -13,8 +13,8 @@ int main() {
   SetTargetFPS(60);
 
   // Initalize objects
-
-  Solver solver;
+  VarStorage storage;
+  Solver solver(&storage);
 
   // Initialize variables
   Display display;

@@ -6,6 +6,7 @@
 #include <math.h>
 #include "storage.cpp"
 
+
 /*
 Error codes:
 100 - mismatched parenthesis
@@ -14,6 +15,7 @@ Error codes:
 400 - token error
 500 - unary error
 600 - shunting yard error
+700 - var not defined
 */
 using std::cout;
 /*
@@ -55,14 +57,20 @@ class Token {
 
 class Solver {
     public:
-        VarStorage storage;
+        VarStorage* storage;
         
-        Solver() {
-            storage = VarStorage();
+        Solver(VarStorage* store) {
+            storage = store;
         }
 
         void printDeque(std::deque<Token> dq);
-        double solve(const std::string& expr);
+        double solve(std::string& expr);
+
+        double integral(double a, double b, std::string expr, std::string var);
+        double derivative(std::string expr, std::string var);
+        bool containsCalculus(std::string expr);
+        void replaceCalculus(std::string &expr);
+        
     private:
         std::deque<Token> expressionToTokens(std::string expr);
         std::deque<Token> shuntingYard(const std::deque<Token>& tokens);
@@ -107,8 +115,8 @@ std::deque<Token> Solver::expressionToTokens(std::string expr) {
             const auto s = std::string(b, p);
             
             //check if var or function
-            if(storage.contains(s)) { //variable
-                tokens.push_back(Token{Token::Type::Number, std::to_string(storage.getVarValue(s))});
+            if(storage->contains(s)) { //variable
+                tokens.push_back(Token{Token::Type::Number, std::to_string(storage->getVarValue(s))});
             }
             else { //function
                 tokens.push_back(Token {Token::Type::Function, s, 4, false, false});
@@ -264,10 +272,14 @@ std::deque<Token> Solver::shuntingYard(const std::deque<Token>& tokens) {
 }
 
 //TODO solve(const std::string& expr)
-double Solver::solve(const std::string& expr) {
+double Solver::solve(std::string& expr) {
     
     cout << "\nSolving expression: " << expr << std::endl;
     
+    if(containsCalculus(expr)) {
+        cout << "\nCalculus: TRUE\n";
+    }
+    replaceCalculus(expr);
     const auto tokens = expressionToTokens(expr);
     printf("\nTokenized expression:\n");
     printDeque(tokens);
@@ -406,11 +418,205 @@ double Solver::solve(const std::string& expr) {
     return stack.back();
 }
 
+double Solver::integral(double a, double b, std::string expr, std::string var) {
+            if(!storage->contains(var)) {
+                throw 700;
+            }
+            bool negate = false;
+            if (a > b) {
+                negate = true;
+                std::swap(a, b);
+            }
 
+            double dx = (b - a)/10000; // Increase denominator for more precision
+            double x = storage->getVarValue(var);
+
+            double sum = 0;
+            for (double i = a; i < b; i = i + dx) {
+                storage->setVarValue(var, i);
+                sum += solve(expr);
+            }
+            sum *= dx;
+
+            if (negate) {sum *= -1;}
+
+            storage->setVarValue(var, x);
+            return sum;
+
+}
+double Solver::derivative(std::string expr, std::string var) {
+            if(!storage->contains(var)) {
+                throw 700;
+            }
+            double dx = 0.000005;
+            
+            double x = storage->getVarValue(var);
+            double xPlusH = x + dx;
+
+            storage->setVarValue(var, xPlusH);
+            double F_xPlusH = solve(expr);
+
+            storage->setVarValue(var, x);
+            double F_x = solve(expr);
+            
+            return ((F_xPlusH - F_x) / dx);
+}
+
+bool Solver::containsCalculus(std::string expr) {
+    std::string integral = "int(";
+    std::string derivative = "d/dx(";
+
+    int position;
+    if(expr.find(integral) != std::string::npos) {
+        return true;
+    }
+    else if(expr.find(derivative) != std::string::npos) {
+        return true;
+    }
+    return false;
+}
+
+void Solver::replaceCalculus(std::string &expr) {
+    std::string integral = "int(";
+    std::string derivative = "d/dx(";
+    std::vector<char> stack;
+    while(containsCalculus(expr)) {
+        int start = 0;
+        int end = 0;
+        std::string substrToReplace;
+        
+        if(expr.find(integral) != std::string::npos) {
+
+            double lowBound = 0.0;
+            double upBound = 0.0;
+            std::string integrate;
+            std::string var;
+
+            start = expr.find(integral);
+            int pos = start + 3;
+            stack.push_back(expr[pos]);
+            int b = pos;
+            pos++;
+            while(!stack.empty()) {
+                if(expr[pos] == '(') {
+                    stack.push_back(expr[pos]);
+                }
+                else if(expr[pos] == ')') {
+                    stack.pop_back();
+                }
+                pos++;
+            }
+            end = pos-1;
+            substrToReplace = expr.substr(start, end);
+
+            cout << expr.substr(b, pos);
+
+            b++;
+            //get lowbound
+            pos = b;
+            while(expr[pos] != ',') {
+                pos++;
+            }
+            cout << std::endl << expr.substr(b, pos-b);
+            lowBound = std::stod(expr.substr(b, pos-b));
+            pos++;
+            
+            //get upbound
+            b = pos;
+            while(expr[pos] != ',') {
+                pos++;
+            }
+            cout << std::endl << expr.substr(b, pos-b);
+            upBound = std::stod(expr.substr(b, pos-b));
+            pos++;
+            
+            //get expression
+            b = pos;
+            while(expr[pos] != ',') {
+                pos++;
+            }
+            cout << std::endl << expr.substr(b, pos-b);
+            integrate = expr.substr(b, pos-b);
+            pos++;
+            
+            //get var
+            b = pos;
+            while(expr[pos] != ')') {
+                pos++;
+            }
+            cout << std::endl << expr.substr(b, pos-b);
+            var = expr.substr(b, pos-b);
+
+            printf("\nresult: %f,%f,%s,%s", lowBound, upBound, integrate.c_str(), var.c_str());
+            double answer = Solver::integral(lowBound, upBound, integrate, var);
+            expr.replace(start, end-start+1, std::to_string(answer));
+            pos = 0;
+            b = 0;
+        }
+        else if(expr.find(derivative) != std::string::npos) {
+
+            std::string derive;
+            std::string var;
+
+            start = expr.find(derivative);
+            int pos = start + 4;
+            stack.push_back(expr[pos]);
+            int b = pos;
+            pos++;
+            while(!stack.empty()) {
+                if(expr[pos] == '(') {
+                    stack.push_back(expr[pos]);
+                }
+                else if(expr[pos] == ')') {
+                    stack.pop_back();
+                }
+                pos++;
+            }
+            end = pos-1;
+            substrToReplace = expr.substr(start, end);
+            
+            cout << expr.substr(b, pos-b);
+            
+            b++;
+            //get expression
+            pos = b;
+            while(expr[pos] != ',') {
+                pos++;
+            }
+            cout << std::endl << expr.substr(b, pos-b);
+            derive = expr.substr(b, pos-b);
+            pos++;
+            
+            //get var
+            b = pos;
+            while(expr[pos] != ')') {
+                pos++;
+            }
+            cout << std::endl << expr.substr(b, pos-b);
+            var = expr.substr(b, pos-b);
+
+            printf("\nresult: %s,%s", derive.c_str(), var.c_str());
+            double answer = Solver::derivative(derive, var);
+            expr.replace(start, end-start+1, std::to_string(answer));
+            b = 0;
+            pos = 0;
+        }
+        start = 0;
+        end = 0;
+        
+    }
+}
+
+
+/*
 int main() {
-    std::string test = "5+5";
-    
-    Solver solver;
+    std::string test2 = "5+int(0,1,x^3,x)";
+    std::string test = "5+d/dx(2x,x)+5+int(0,1,x^3,x)";
+    VarStorage storage;
+    Solver solver(&storage);
+    solver.storage->setVarValue("x", 5);
     
     solver.solve(test);
+
 }
+*/
