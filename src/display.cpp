@@ -24,6 +24,7 @@ private:
   Vector2 displaySize;
   std::vector<IoBlock> history;
   bool inverseTrig = false;
+  bool shape_mode = false;
 
   void processInput();
   std::string GetCharsPressed();
@@ -41,12 +42,41 @@ Display::Display() : keypad(0, 0, 0, 0) {
   keypad.addButton("mode", pos);
   keypad.addButton("inv", pos);
   keypad.addButton("store", pos);
+  keypad.addButton("shapes", pos);
+
+  pos++;
+  keypad.addButton("shapes", pos);
 
   pos++;
   keypad.addButton("d/dx", pos);
   keypad.addButton("pi", pos);
   keypad.addButton("e", pos);
-  keypad.addButton("const", pos);
+
+  pos++;
+  keypad.addButton("squareArea(", pos);
+  keypad.addButton("squarePerimeter", pos);
+
+  keypad.addButton("rectangleArea(", pos);
+  keypad.addButton("rectanglePerimeter(", pos);
+
+  keypad.addButton("cubeSurfaceArea(", pos);
+  keypad.addButton("cubeVolume(", pos);
+
+  keypad.addButton("rectangularPrismSurfaceArea(", pos);
+  keypad.addButton("rectangularPrismVolume(", pos);
+
+  pos++;
+  keypad.addButton("trapezoidArea(", pos);
+  keypad.addButton("trapezoidPerimeter(", pos);
+
+  keypad.addButton("circleArea(", pos);
+  keypad.addButton("circleCircumference(", pos);
+
+  keypad.addButton("sphereSurfaceArea(", pos);
+  keypad.addButton("sphereVolume(", pos);
+
+  keypad.addButton("pyramidSurfaceArea(", pos);
+  keypad.addButton("pyramidVolume(", pos);
 
   pos++;
   keypad.addButton("sin(", pos);
@@ -87,7 +117,9 @@ Display::Display() : keypad(0, 0, 0, 0) {
   keypad.addButton("-", pos);
   keypad.addButton("*", pos);
   keypad.addButton("/", pos);
-  keypad.addButton("hist", pos);
+
+  // hide buttons
+  keypad.mask = {0, 2, 5, 6, 7, 8, 9, 10};
 }
 
 // updates UI elements and proccesses user input
@@ -169,7 +201,14 @@ void Display::processInput() {
   } else if (input == "store") {
     std::cout << "Store not implemetned" << std::endl;
 
-  } else if (input == "const") {
+  } else if (input == "shapes") {
+    shape_mode = !shape_mode;
+
+    if (shape_mode) {
+      keypad.mask = {1, 3, 4};
+    } else {
+      keypad.mask = {0, 2, 5, 6, 7, 8, 9, 10};
+    }
 
   } else if (input == "varx") {
 

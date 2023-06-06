@@ -9,7 +9,9 @@
 
 int main() {
 
+  SetConfigFlags(FLAG_WINDOW_RESIZABLE);
   InitWindow(screenWidth, screenHeight, "Calculator");
+  MaximizeWindow();
   SetTargetFPS(60);
 
   // Initalize objects
@@ -28,8 +30,7 @@ int main() {
       try {
         std::string expr = std::to_string(solver.solve(problem));
         display.solution(expr);
-      }
-      catch(int errorCode) {
+      } catch (int errorCode) {
         display.readyToSolve = false;
         cout << "Error #: " + errorCode;
         display.solution("Error: " + errorCode);
