@@ -51,7 +51,6 @@ Display::Display() : keypad(0, 0, 0, 0) {
   keypad.addButton("d/dx", pos);
   keypad.addButton("pi", pos);
   keypad.addButton("e", pos);
-  keypad.addButton("const", pos);
 
   pos++;
   keypad.addButton("squareArea(", pos);
