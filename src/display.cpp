@@ -122,6 +122,7 @@ Display::Display() : keypad(0, 0, 0, 0) {
   keypad.addButton("-", pos);
   keypad.addButton("*", pos);
   keypad.addButton("/", pos);
+  keypad.addButton(",", pos);
 
   // hide buttons
   keypad.mask = {0, 2, 5, 7, 8, 9, 10, 11};
