@@ -25,7 +25,15 @@ int main() {
     if (display.readyToSolve) {
       std::string problem = display.getProblem();
       // display.radians
-      display.solution(std::to_string(solver.solve(problem)));
+      try {
+        std::string expr = std::to_string(solver.solve(problem));
+        display.solution(expr);
+      }
+      catch(int errorCode) {
+        display.readyToSolve = false;
+        cout << "Error #: " + errorCode;
+        display.solution("Error: " + errorCode);
+      }
     }
 
     BeginDrawing();
