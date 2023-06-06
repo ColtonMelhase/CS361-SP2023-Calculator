@@ -6,6 +6,15 @@
 #include <math.h>
 #include "storage.cpp"
 
+/*
+Error codes:
+100 - mismatched parenthesis
+200 - operator error
+300 - function error
+400 - token error
+500 - unary error
+600 - shunting yard error
+*/
 using std::cout;
 /*
 Token class
@@ -91,11 +100,11 @@ std::deque<Token> Solver::expressionToTokens(std::string expr) {
             }
             
             const auto* b = p;
-            while(isalpha(*p)) {
+            while(isalpha(*p) && *p != ',') {
                 ++p;
             }
             const auto s = std::string(b, p);
-
+            
             if(storage.contains(s)) { //variable
                 tokens.push_back(Token{Token::Type::Number, std::to_string(storage.getVarValue(s))});
             }
@@ -155,7 +164,7 @@ void Solver::printDeque(std::deque<Token> dq) {
     for(int i = 0; i < dq.size(); i++) {
         cout << "'" + dq.at(i).str;
         if(i != dq.size()-1) {
-            cout <<  "', ";
+            cout <<  "' ";
         } else {
             cout << "'";
         }
@@ -228,7 +237,7 @@ std::deque<Token> Solver::shuntingYard(const std::deque<Token>& tokens) {
 
                 if(!match && stack.empty()) {
                     cout << "Mismatched parenthesis1\n";
-                    return {};
+                    throw 100;
                 }
                 stack.pop_back();
             }
@@ -236,14 +245,14 @@ std::deque<Token> Solver::shuntingYard(const std::deque<Token>& tokens) {
             //case Token::Type::Constant
             default:
                 cout << "Error: " + token.str;
-                return {};
+                throw 600;
         }
     }
 
     while(!stack.empty()) {
             if(stack.back().type == Token::Type::LeftParenthesis) {
                 cout << "Mismatched parenthesis2\n";
-                return {};
+                throw 100;
             }
 
             queue.push_back(std::move(stack.back()));
@@ -291,8 +300,9 @@ double Solver::solve(const std::string& expr) {
                         case 'm':
                             stack.push_back(-rhs);
                         break;
-                        //default:
-                            //cout << std::endl << "Operator (unary) error: " + token.str;
+                        default:
+                            throw 500;
+                            cout << std::endl << "Operator (unary) error: " + token.str;
                             //exit(0);
                     }
                     op = "Pushing (unary) " + token.str + " " + std::to_string(rhs);
@@ -323,6 +333,7 @@ double Solver::solve(const std::string& expr) {
                         break;
                         default:
                             cout << std::endl << "Operator error: " + token.str;
+                            throw 200;
                             //exit(0);
                     }
                     op = "Pushing " + std::to_string(lhs) + " " + token.str + " " + std::to_string(rhs);
@@ -360,12 +371,14 @@ double Solver::solve(const std::string& expr) {
                 }
                 else {
                     cout << std::endl << "Function Error\n";
+                    throw 300;
                     //exit(0);
                 }
                 op = "Pushing " + token.str + "(" + std::to_string(theta) + ")";
             break;
             default:
                 cout << "Token Error\n";
+                throw 400;
                 //exit(0);
         }
         cout << std::endl << op;
@@ -390,7 +403,8 @@ double Solver::solve(const std::string& expr) {
 
 /*
 int main() {
-    std::string test = "pi(5)";
+    std::string test = "e";
+    
     Solver solver;
     
     solver.solve(test);
