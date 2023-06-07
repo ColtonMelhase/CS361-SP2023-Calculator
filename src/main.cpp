@@ -9,12 +9,14 @@
 
 int main() {
 
+  SetConfigFlags(FLAG_WINDOW_RESIZABLE);
   InitWindow(screenWidth, screenHeight, "Calculator");
+  MaximizeWindow();
   SetTargetFPS(60);
 
   // Initalize objects
-
-  Solver solver;
+  VarStorage storage;
+  Solver solver(&storage);
 
   // Initialize variables
   Display display;
@@ -24,8 +26,15 @@ int main() {
 
     if (display.readyToSolve) {
       std::string problem = display.getProblem();
-      // display.radians
-      display.solution(std::to_string(solver.solve(problem)));
+      try {
+        solver.radians = display.radians;   // set the mode in the solver class to the mode in the display
+        std::string expr = std::to_string(solver.solve(problem));
+        display.solution(expr);
+      } catch (int errorCode) {
+        display.readyToSolve = false;
+        cout << "Error #: " + errorCode;
+        display.solution("Error: " + errorCode);
+      }
     }
 
     BeginDrawing();
