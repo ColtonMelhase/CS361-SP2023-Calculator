@@ -80,7 +80,7 @@ std::deque<Token> Solver::expressionToTokens(std::string expr) {
   std::deque<Token> tokens;
 
   for (const auto *p = expr.c_str(); *p; ++p) {
-    if (isblank(*p)) {
+    if (isblank(*p) || *p == ',') {
       // nothing
     } else if (isdigit(*p)) { // digit
       const auto *b = p;
