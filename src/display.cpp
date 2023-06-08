@@ -39,7 +39,7 @@ Display::Display() : keypad(0, 0, 0, 0) {
   history.push_back(IoBlock());
 
   int pos = 0;
-  keypad.addButton("mode", pos);
+  keypad.addButton("rad", pos);
   keypad.addButton("inv", pos);
   keypad.addButton("store", pos);
   keypad.addButton("shapes", pos);
@@ -211,6 +211,14 @@ void Display::processInput() {
 
   } else if (input == "mode") {
     radians = !radians;
+
+  } else if (input == "rad") {
+    radians = false;
+    keypad.buttons[0][0].label = "deg";
+
+  } else if (input == "deg") {
+    radians = true;
+    keypad.buttons[0][0].label = "rad";
 
   } else if (input == "inv") {
     inverseTrig = !inverseTrig;
