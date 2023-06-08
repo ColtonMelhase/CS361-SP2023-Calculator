@@ -48,6 +48,7 @@ Display::Display() : keypad(0, 0, 0, 0) {
   keypad.addButton("shapes", pos);
 
   pos++;
+  keypad.addButton("d/dx(", pos);
   keypad.addButton("int(", pos);
   keypad.addButton("pi", pos);
   keypad.addButton("e", pos);
