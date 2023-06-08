@@ -27,13 +27,14 @@ int main() {
     if (display.readyToSolve) {
       std::string problem = display.getProblem();
       try {
-        solver.radians = display.radians;   // set the mode in the solver class to the mode in the display
+        solver.radians = display.radians; // set the mode in the solver class to
+                                          // the mode in the display
         std::string expr = std::to_string(solver.solve(problem));
         display.solution(expr);
       } catch (int errorCode) {
         display.readyToSolve = false;
-        cout << "Error #: " + errorCode;
-        display.solution("Error: " + errorCode);
+        cout << "Error #: " + std::to_string(errorCode);
+        display.solution("Error: " + std::to_string(errorCode));
       }
     }
 
