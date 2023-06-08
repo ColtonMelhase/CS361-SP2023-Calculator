@@ -53,22 +53,22 @@ double trapezoidPerimeter(double base1, double base2, double side1, double side2
 
 // Calculate the area of a circle
 double circleArea(double radius) {
-    return M_PI * radius * radius;
+    return 3.14159265 * radius * radius;
 }
 
 // Calculate the circumference of a circle
 double circleCircumference(double radius) {
-    return 2 * M_PI * radius;
+    return 2 * 3.14159265 * radius;
 }
 
 // Calculate the surface area of a sphere
 double sphereSurfaceArea(double radius) {
-    return 4 * M_PI * radius * radius;
+    return 4 * 3.14159265 * radius * radius;
 }
 
 // Calculate the volume of a sphere
 double sphereVolume(double radius) {
-    return (4 / 3) * M_PI * radius * radius * radius;
+    return (4 / 3) * 3.14159265 * radius * radius * radius;
 }
 
 // Calculate the surface area of a pyramid

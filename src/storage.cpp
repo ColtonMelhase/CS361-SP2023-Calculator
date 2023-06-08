@@ -1,5 +1,6 @@
 #include <map>
 #include <string>
+#include <iostream>
 
 class VarStorage {
     public:
@@ -22,7 +23,14 @@ void VarStorage::setVarValue(std::string key, double val) {
 }
 
 double VarStorage::getVarValue(std::string key) {
-    return vars.at(key);
+    if(contains(key)) {
+        return vars.at(key);
+    }
+    else {
+        std::cout << "\nVariable " << key << " not found: ";
+        return 0.0;
+    }
+    
 }
 
 bool VarStorage::contains(std::string key) {

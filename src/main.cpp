@@ -28,13 +28,20 @@ int main() {
       std::string problem = display.getProblem();
       try {
         solver.radians = display.radians;   // set the mode in the solver class to the mode in the display
+        solver.defineVar = display.defineVar; // set the defineVar bool to solver
         std::string expr = std::to_string(solver.solve(problem));
         display.solution(expr);
+
+        if(display.defineVar) {
+          display.defineVar = !display.defineVar;
+          std::cout << "\nDEFINE: " << "FALSE\n";
+        }
       } catch (int errorCode) {
         display.readyToSolve = false;
         cout << "Error #: " + errorCode;
         display.solution("Error: " + errorCode);
       }
+      display.readyToSolve=false;
     }
 
     BeginDrawing();

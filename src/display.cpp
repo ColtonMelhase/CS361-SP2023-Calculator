@@ -8,6 +8,7 @@
 class Display {
 public:
   bool radians = true; // input is in radians by default
+  bool defineVar = false; // // determine if incoming string is var definition or not
 
   // is true when the display has a problem ready to solve
   bool readyToSolve = false;
@@ -114,7 +115,7 @@ Display::Display() : keypad(0, 0, 0, 0) {
   keypad.addButton("3", pos);
   keypad.addButton("6", pos);
   keypad.addButton("9", pos);
-  keypad.addButton("=", pos);
+  keypad.addButton(" = ", pos);
 
   pos++;
   keypad.addButton("clear", pos);
@@ -201,8 +202,8 @@ void Display::processInput() {
       return;
     history.back().input.label.pop_back();
 
-  } else if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_KP_EQUAL) ||
-             input == "=") {
+  } else if (IsKeyPressed(KEY_ENTER) /*|| IsKeyPressed(KEY_KP_EQUAL)*/ ||
+             input == " = ") {
     readyToSolve = true;
 
   } else if (input == "clear") {
@@ -210,12 +211,24 @@ void Display::processInput() {
 
   } else if (input == "mode") {
     radians = !radians;
+    if(radians) {
+        std::cout << "\nRadians: " << "TRUE\n";
+    } else {
+        std::cout << "\nRadians: " << "FALSE\n";
+    }
+    
 
   } else if (input == "inv") {
     inverseTrig = !inverseTrig;
 
   } else if (input == "store") {
-    std::cout << "Store not implemetned" << std::endl;
+    //std::cout << "Store not implemetned" << std::endl;
+    defineVar = !defineVar;
+    if(defineVar) {
+        std::cout << "\nDEFINE: " << "TRUE\n";
+    } else {
+        std::cout << "\nDEFINE: " << "FALSE\n";
+    }
 
   } else if (input == "shapes") {
     shape_mode = !shape_mode;

@@ -5,7 +5,7 @@
 #include <math.h>
 #include <string>
 #include <vector>
-
+#include "shapes.cpp"
 
 /*
 Error codes:
@@ -16,6 +16,7 @@ Error codes:
 500 - unary error
 600 - shunting yard error
 700 - var not defined
+800 - expression is not definition. missing =
 */
 using std::cout;
 /*
@@ -58,6 +59,7 @@ class Solver {
         }
 
         bool radians = true; // mode status, in radians by default (same as in display.cpp)
+        bool defineVar = false; // determine if incoming string is var definition or not
 
         void printDeque(std::deque<Token> dq);
         double solve(std::string& expr);
@@ -113,7 +115,7 @@ std::deque<Token> Solver::expressionToTokens(std::string expr) {
       // check if var or function
       if (storage->contains(s)) { // variable
         tokens.push_back(
-            Token{Token::Type::Number, std::to_string(storage->contains(s))});
+            Token{Token::Type::Number, std::to_string(storage->getVarValue(s))});
       } else { // function
         tokens.push_back(Token{Token::Type::Function, s, 4, false, false});
       }
@@ -260,7 +262,7 @@ std::deque<Token> Solver::shuntingYard(const std::deque<Token> &tokens) {
       }
 
       if (!match && stack.empty()) {
-        printf("\nMismatched parenthesis\n");
+        printf("\nMismatched parenthesis1\n");
         throw 100;
       }
       stack.pop_back();
@@ -274,7 +276,7 @@ std::deque<Token> Solver::shuntingYard(const std::deque<Token> &tokens) {
 
   while (!stack.empty()) {
     if (stack.back().type == Token::Type::LeftParenthesis) {
-      printf("\nMismatched parenthesis\n");
+      printf("\nMismatched parenthesis2\n");
       throw 100;
     }
 
@@ -287,8 +289,30 @@ std::deque<Token> Solver::shuntingYard(const std::deque<Token> &tokens) {
 //TODO solve(const std::string& expr)
 double Solver::solve(std::string& expr) {
     
-    cout << "\nSolving expression: " << expr << std::endl;
-    
+    //cout << "\n\n-------[Solving expression: " << expr << "]" << std::endl;
+
+
+    //IF DEFINE VAR IS TRUE, SET VAR AND RETURN.
+    if(defineVar) {
+
+      if(expr.find('=') == std::string::npos) {
+        throw 800;
+      }
+      std::string varName;
+      double varValue = 0.0;
+
+      varName = expr.substr(0, expr.find('='));
+      varValue = std::stod(expr.substr(expr.find('=')+1, expr.length()));
+      
+      cout << "\nSETTING VAR: " << varName << " WITH VALUE: " << varValue;
+      storage->setVarValue(varName, varValue);
+
+      //TOGGLE defineVar
+      defineVar = !defineVar;
+      return varValue;
+    }
+
+    //CHECK FOR CALCULUS
     if(containsCalculus(expr)) {
         cout << "\nCalculus: TRUE\n";
     }
@@ -297,16 +321,22 @@ double Solver::solve(std::string& expr) {
     } catch(int errorCode) {
         throw errorCode;
     }
-    
-    const auto tokens = expressionToTokens(expr);
-    printf("\nTokenized expression:\n");
-    printDeque(tokens);
-    
-
-    auto queue = shuntingYard(tokens);
-    printf("\nPostfix expression:\n");
-    printDeque(queue);
-
+    std::deque<Token> tokens;
+    try {
+      tokens = expressionToTokens(expr);
+      //printf("\nTokenized expression:\n");
+      //printDeque(tokens);
+    } catch(int errorCode) {
+      throw errorCode;
+    }
+    std::deque<Token> queue;
+    try {
+      queue = shuntingYard(tokens);
+      //printf("\nPostfix expression:\n");
+      //printDeque(queue);
+    } catch(int errorCode) {
+      throw errorCode;
+    }
   std::vector<double> stack;
 
   double rhs;
@@ -323,7 +353,7 @@ double Solver::solve(std::string& expr) {
     case Token::Type::Number:
       stack.push_back(std::stod(
           token.str)); // convert token's string to double, push to stack
-      op = "Pushing " + token.str;
+      //op = "Pushing " + token.str;
       break;
     case Token::Type::Operator: {
       // if negative sign
@@ -340,7 +370,7 @@ double Solver::solve(std::string& expr) {
           printf("\nUnary operator error: %s\n", token.str);
           // exit(0);
         }
-        op = "Pushing (unary) " + token.str + " " + std::to_string(rhs);
+        //op = "Pushing (unary) " + token.str + " " + std::to_string(rhs);
       } else { // operators
         // get 2 previous numbers
         rhs = stack.back();
@@ -366,11 +396,11 @@ double Solver::solve(std::string& expr) {
           stack.push_back(lhs - rhs);
           break;
         default:
-          printf("Operator error: %s", token.str);
+          //printf("Operator error: %s", token.str);
           throw 200;
           // exit(0);
         }
-        op = "Pushing " + std::to_string(lhs) + " " + token.str + " " +
+        //op = "Pushing " + std::to_string(lhs) + " " + token.str + " " +
              std::to_string(rhs);
       }
     } break;
@@ -381,7 +411,7 @@ double Solver::solve(std::string& expr) {
 
       // if the input (theta) is in degrees, it must be converted to radians for the functions below
       if (!radians) {
-        theta = theta * (pi/180); // radians = degrees * pi / 180
+        theta = theta * (storage->getVarValue("pi")/180); // radians = degrees * pi / 180
       }
 
       if (token.str == "sin") {
@@ -400,19 +430,28 @@ double Solver::solve(std::string& expr) {
         stack.push_back(log(theta));
       } else if (token.str == "log") {
         stack.push_back(log10(theta));
+      } else if(token.str == "squareArea") {
+        stack.push_back(squareArea(theta));
+      } else if(token.str == "squarePerimeter") {
+        stack.push_back(squarePerimeter(theta));
+      } else if(token.str == "cubeSurfaceArea") {
+        stack.push_back(cubeSurfaceArea(theta));
+      } else if(token.str == "cubeVolume") {
+        stack.push_back(cubeVolume(theta));
+
       } else {
         printf("\nFunction Error: %s\n", token.str.c_str());
         throw 300;
         // exit(0);
       }
-      op = "Pushing " + token.str + "(" + std::to_string(theta) + ")";
+      //op = "Pushing " + token.str + "(" + std::to_string(theta) + ")";
       break;
     default:
       printf("Token error: %s", token.str);
       throw 400;
       // exit(0);
     }
-    cout << std::endl << op;
+    //cout << std::endl << op;
   }
   // check for implied mutliplication
   while (stack.size() > 1) {
@@ -424,12 +463,12 @@ double Solver::solve(std::string& expr) {
 
     stack.push_back(lhs * rhs);
 
-    printf("\nPushing implied multiply: %f * %f = %f", lhs, rhs, lhs * rhs);
+    //printf("\nPushing implied multiply: %f * %f = %f", lhs, rhs, lhs * rhs);
   }
 
   // return result
 
-  printf("\nResult: %f", stack.back());
+  //printf("\nResult: %f", stack.back());
   return stack.back();
 }
 
@@ -633,15 +672,15 @@ void Solver::replaceCalculus(std::string &expr) {
 }
 
 
-
+/*
 int main() {
     std::string test2 = "5+int(0,1,x^3,x)";
-    std::string test = "5+rectangleArea(20, 10)";
+    std::string test = "d/dx(5e^2,e)";
+    std::string testdefine = "test=24.7";
     VarStorage storage;
     Solver solver(&storage);
-    solver.storage->setVarValue("x", 5);
+    solver.defineVar = true;
     
-    solver.solve(test);
-
+    solver.solve(testdefine);
 }
-
+*/
