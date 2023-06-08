@@ -40,7 +40,7 @@ Display::Display() : keypad(0, 0, 0, 0) {
   history.push_back(IoBlock());
 
   int pos = 0;
-  keypad.addButton("mode", pos);
+  keypad.addButton("rad", pos);
   keypad.addButton("inv", pos);
   keypad.addButton("store", pos);
   keypad.addButton("shapes", pos);
@@ -49,13 +49,14 @@ Display::Display() : keypad(0, 0, 0, 0) {
   keypad.addButton("shapes", pos);
 
   pos++;
+  keypad.addButton("d/dx(", pos);
   keypad.addButton("int(", pos);
   keypad.addButton("pi", pos);
   keypad.addButton("e", pos);
 
   pos++;
   keypad.addButton("squareArea(", pos);
-  keypad.addButton("squarePerimeter", pos);
+  keypad.addButton("squarePerimeter(", pos);
 
   keypad.addButton("rectangleArea(", pos);
   keypad.addButton("rectanglePerimeter(", pos);
@@ -217,6 +218,14 @@ void Display::processInput() {
         std::cout << "\nRadians: " << "FALSE\n";
     }
     
+
+  } else if (input == "rad") {
+    radians = false;
+    keypad.buttons[0][0].label = "deg";
+
+  } else if (input == "deg") {
+    radians = true;
+    keypad.buttons[0][0].label = "rad";
 
   } else if (input == "inv") {
     inverseTrig = !inverseTrig;

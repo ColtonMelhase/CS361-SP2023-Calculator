@@ -7,6 +7,7 @@
 class Keypad {
 public:
   std::vector<int> mask;
+  std::vector<std::vector<Button>> buttons;
 
   Keypad(Rectangle);
   Keypad(Vector2, Vector2);
@@ -21,7 +22,6 @@ public:
 
 private:
   Rectangle rect;
-  std::vector<std::vector<Button>> buttons;
   bool updateRequired;
 
   void update();

@@ -38,8 +38,8 @@ int main() {
         }
       } catch (int errorCode) {
         display.readyToSolve = false;
-        cout << "Error #: " + errorCode;
-        display.solution("Error: " + errorCode);
+        cout << "Error #: " + std::to_string(errorCode);
+        display.solution("Error: " + std::to_string(errorCode));
       }
       display.readyToSolve=false;
     }
