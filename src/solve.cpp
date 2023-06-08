@@ -290,7 +290,12 @@ double Solver::solve(std::string& expr) {
     if(containsCalculus(expr)) {
         cout << "\nCalculus: TRUE\n";
     }
-    replaceCalculus(expr);
+    try {
+        replaceCalculus(expr);
+    } catch(int errorCode) {
+        throw errorCode;
+    }
+    
     const auto tokens = expressionToTokens(expr);
     printf("\nTokenized expression:\n");
     printDeque(tokens);
@@ -389,7 +394,7 @@ double Solver::solve(std::string& expr) {
       } else if (token.str == "log") {
         stack.push_back(log10(theta));
       } else {
-        printf("\nFunction Error: %s\n", token.str);
+        printf("\nFunction Error: %s\n", token.str.c_str());
         throw 300;
         // exit(0);
       }
@@ -512,7 +517,7 @@ void Solver::replaceCalculus(std::string &expr) {
             end = pos-1;
             substrToReplace = expr.substr(start, end);
 
-            cout << expr.substr(b, pos);
+            //cout << expr.substr(b, pos);
 
             b++;
             //get lowbound
@@ -520,7 +525,7 @@ void Solver::replaceCalculus(std::string &expr) {
             while(expr[pos] != ',') {
                 pos++;
             }
-            cout << std::endl << expr.substr(b, pos-b);
+            //cout << std::endl << expr.substr(b, pos-b);
             lowBound = std::stod(expr.substr(b, pos-b));
             pos++;
             
@@ -529,7 +534,7 @@ void Solver::replaceCalculus(std::string &expr) {
             while(expr[pos] != ',') {
                 pos++;
             }
-            cout << std::endl << expr.substr(b, pos-b);
+            //cout << std::endl << expr.substr(b, pos-b);
             upBound = std::stod(expr.substr(b, pos-b));
             pos++;
             
@@ -538,7 +543,7 @@ void Solver::replaceCalculus(std::string &expr) {
             while(expr[pos] != ',') {
                 pos++;
             }
-            cout << std::endl << expr.substr(b, pos-b);
+            //cout << std::endl << expr.substr(b, pos-b);
             integrate = expr.substr(b, pos-b);
             pos++;
             
@@ -547,12 +552,17 @@ void Solver::replaceCalculus(std::string &expr) {
             while(expr[pos] != ')') {
                 pos++;
             }
-            cout << std::endl << expr.substr(b, pos-b);
+            //cout << std::endl << expr.substr(b, pos-b);
             var = expr.substr(b, pos-b);
 
-            printf("\nresult: %f,%f,%s,%s", lowBound, upBound, integrate.c_str(), var.c_str());
-            double answer = Solver::integral(lowBound, upBound, integrate, var);
-            expr.replace(start, end-start+1, std::to_string(answer));
+            //printf("\nresult: %f,%f,%s,%s", lowBound, upBound, integrate.c_str(), var.c_str());
+            try {
+                double answer = Solver::integral(lowBound, upBound, integrate, var);
+                expr.replace(start, end-start+1, std::to_string(answer));
+            } catch(int errorCode) {
+                throw errorCode;
+            }
+            
             pos = 0;
             b = 0;
         }
@@ -578,7 +588,7 @@ void Solver::replaceCalculus(std::string &expr) {
             end = pos-1;
             substrToReplace = expr.substr(start, end);
             
-            cout << expr.substr(b, pos-b);
+            //cout << expr.substr(b, pos-b);
             
             b++;
             //get expression
@@ -586,7 +596,7 @@ void Solver::replaceCalculus(std::string &expr) {
             while(expr[pos] != ',') {
                 pos++;
             }
-            cout << std::endl << expr.substr(b, pos-b);
+            //cout << std::endl << expr.substr(b, pos-b);
             derive = expr.substr(b, pos-b);
             pos++;
             
@@ -595,12 +605,17 @@ void Solver::replaceCalculus(std::string &expr) {
             while(expr[pos] != ')') {
                 pos++;
             }
-            cout << std::endl << expr.substr(b, pos-b);
+            //cout << std::endl << expr.substr(b, pos-b);
             var = expr.substr(b, pos-b);
 
-            printf("\nresult: %s,%s", derive.c_str(), var.c_str());
-            double answer = Solver::derivative(derive, var);
-            expr.replace(start, end-start+1, std::to_string(answer));
+            //printf("\nresult: %s,%s", derive.c_str(), var.c_str());
+            try {
+                double answer = Solver::derivative(derive, var);
+                expr.replace(start, end-start+1, std::to_string(answer));
+            } catch(int errorCode) {
+                throw errorCode;
+            }
+            
             b = 0;
             pos = 0;
         }
@@ -611,10 +626,10 @@ void Solver::replaceCalculus(std::string &expr) {
 }
 
 
-/*
+
 int main() {
     std::string test2 = "5+int(0,1,x^3,x)";
-    std::string test = "5+d/dx(2x,x)+5+int(0,1,x^3,x)";
+    std::string test = "5+rectangleArea(20, 10)";
     VarStorage storage;
     Solver solver(&storage);
     solver.storage->setVarValue("x", 5);
@@ -622,4 +637,4 @@ int main() {
     solver.solve(test);
 
 }
-*/
+
