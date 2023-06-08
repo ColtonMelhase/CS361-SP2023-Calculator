@@ -7,7 +7,7 @@
 
 class Display {
 public:
-  bool radians = false;
+  bool radians = true; // input is in radians by default
 
   // is true when the display has a problem ready to solve
   bool readyToSolve = false;
@@ -48,7 +48,7 @@ Display::Display() : keypad(0, 0, 0, 0) {
   keypad.addButton("shapes", pos);
 
   pos++;
-  keypad.addButton("d/dx", pos);
+  keypad.addButton("int(", pos);
   keypad.addButton("pi", pos);
   keypad.addButton("e", pos);
 
@@ -84,6 +84,11 @@ Display::Display() : keypad(0, 0, 0, 0) {
   keypad.addButton("tan(", pos);
 
   pos++;
+  keypad.addButton("asin(", pos);
+  keypad.addButton("acos(", pos);
+  keypad.addButton("atan(", pos);
+
+  pos++;
   keypad.addButton("varx", pos);
   keypad.addButton("^", pos);
   keypad.addButton("^(0.5)", pos);
@@ -117,13 +122,24 @@ Display::Display() : keypad(0, 0, 0, 0) {
   keypad.addButton("-", pos);
   keypad.addButton("*", pos);
   keypad.addButton("/", pos);
+  keypad.addButton(",", pos);
 
   // hide buttons
-  keypad.mask = {0, 2, 5, 6, 7, 8, 9, 10};
+  keypad.mask = {0, 2, 5, 7, 8, 9, 10, 11};
 }
 
 // updates UI elements and proccesses user input
 void Display::update() {
+  if (shape_mode) {
+    keypad.mask = {1, 3, 4};
+  } else {
+    if (!inverseTrig) {
+      keypad.mask = {0, 2, 5, 7, 8, 9, 10, 11};
+    } else {
+      keypad.mask = {0, 2, 6, 7, 8, 9, 10, 11};
+    }
+  }
+
   displaySize = {(float)GetScreenWidth(), (float)GetScreenHeight()};
   keypad.setRect(0, displaySize.y / 2, displaySize.x, displaySize.y / 2);
 
@@ -203,12 +219,6 @@ void Display::processInput() {
 
   } else if (input == "shapes") {
     shape_mode = !shape_mode;
-
-    if (shape_mode) {
-      keypad.mask = {1, 3, 4};
-    } else {
-      keypad.mask = {0, 2, 5, 6, 7, 8, 9, 10};
-    }
 
   } else if (input == "varx") {
 

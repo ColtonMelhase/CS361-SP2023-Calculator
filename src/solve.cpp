@@ -57,6 +57,8 @@ class Solver {
             storage = store;
         }
 
+        bool radians = true; // mode status, in radians by default (same as in display.cpp)
+
         void printDeque(std::deque<Token> dq);
         double solve(std::string& expr);
 
@@ -376,6 +378,11 @@ double Solver::solve(std::string& expr) {
 
       theta = stack.back();
       stack.pop_back();
+
+      // if the input (theta) is in degrees, it must be converted to radians for the functions below
+      if (!radians) {
+        theta = theta * (pi/180); // radians = degrees * pi / 180
+      }
 
       if (token.str == "sin") {
         stack.push_back(sin(theta));

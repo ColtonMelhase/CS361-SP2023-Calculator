@@ -26,8 +26,8 @@ int main() {
 
     if (display.readyToSolve) {
       std::string problem = display.getProblem();
-      // display.radians
       try {
+        solver.radians = display.radians;   // set the mode in the solver class to the mode in the display
         std::string expr = std::to_string(solver.solve(problem));
         display.solution(expr);
       } catch (int errorCode) {
