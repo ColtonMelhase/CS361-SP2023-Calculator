@@ -174,7 +174,7 @@ std::deque<Token> Solver::expressionToTokens(std::string expr) {
       tokens.push_back(Token{t, s, precedence, rightAssociative, unary});
     }
   }
-
+  
   return tokens;
 }
 
@@ -452,6 +452,9 @@ double Solver::solve(std::string& expr) {
       // exit(0);
     }
     //cout << std::endl << op;
+  }
+  if(stack.size() == 0) {
+    return 0.0;
   }
   // check for implied mutliplication
   while (stack.size() > 1) {
