@@ -54,7 +54,7 @@ Display::Display() : keypad(0, 0, 0, 0) {
 
   pos++;
   keypad.addButton("squareArea(", pos);
-  keypad.addButton("squarePerimeter", pos);
+  keypad.addButton("squarePerimeter(", pos);
 
   keypad.addButton("rectangleArea(", pos);
   keypad.addButton("rectanglePerimeter(", pos);
