@@ -678,12 +678,12 @@ void Solver::replaceCalculus(std::string &expr) {
 /*
 int main() {
     std::string test2 = "5+int(0,1,x^3,x)";
-    std::string test = "d/dx(5e^2,e)";
+    std::string test = "x";
     std::string testdefine = "test=24.7";
     VarStorage storage;
     Solver solver(&storage);
     solver.defineVar = true;
     
-    solver.solve(testdefine);
+    solver.solve(test);
 }
 */
